@@ -1,0 +1,17 @@
+---
+- name: Install Oh My Zsh
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  args:
+    creates: "~/.oh-my-zsh"
+    executable: /bin/bash
+  register: oh_my_zsh_install
+
+- name: Change shell to Zsh
+  command: chsh -s /bin/zsh
+  when: oh_my_zsh_install is changed
+
+- name: Set Oh My Zsh theme
+  lineinfile:
+    path: "~/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME="robbyrussell"'

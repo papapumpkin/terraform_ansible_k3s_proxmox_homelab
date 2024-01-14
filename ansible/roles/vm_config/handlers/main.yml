@@ -1,0 +1,24 @@
+---
+- name: Restart SSH
+  service:
+    name: ssh
+    state: restarted
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Restart fail2ban
+  service:
+    name: fail2ban
+    state: restarted
+
+- name: Reload tmux
+  command: tmux source-file ~/.tmux.conf
+  when: tmux_running.stdout != ""
+  register: tmux_reload
+
+- name: Ensure tmux is running
+  command: tmux new-session -d -s reload
+  ignore_errors: true
+

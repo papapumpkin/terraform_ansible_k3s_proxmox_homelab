@@ -1,0 +1,11 @@
+---
+- name: Copy fail2ban local configuration files if they don't exist
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    force: no
+    remote_src: yes
+  loop:
+    - { src: '/etc/fail2ban/fail2ban.conf', dest: '/etc/fail2ban/fail2ban.local' }
+    - { src: '/etc/fail2ban/jail.conf', dest: '/etc/fail2ban/jail.local' }
+  notify: Restart fail2ban

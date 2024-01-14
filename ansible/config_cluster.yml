@@ -1,0 +1,15 @@
+---
+- hosts: k3s_cluster
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: install_helm
+
+- hosts: localhost
+  gather_facts: no
+  environment:
+    KUBECONFIG: "./kubeconfig.yml"
+  roles:
+    - role: install_argocd
+    - role: install_rook
+    - role: install_kube_prometheus

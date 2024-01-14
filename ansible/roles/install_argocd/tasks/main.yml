@@ -1,0 +1,22 @@
+---
+- name: Add ArgoCD Helm Chart Repository
+  community.kubernetes.helm_repository:
+    name: argo-cd
+    repo_url: https://argoproj.github.io/argo-helm
+    state: present
+
+- name: Update Helm Chart Repositories
+  ansible.builtin.command: helm repo update
+
+- name: Install Argo CD via Helm
+  community.kubernetes.helm:
+    name: argocd
+    chart_ref: argocd/argo-cd
+    chart_version: "5.31.0"
+    release_namespace: argocd
+    create_namespace: yes
+    values:
+      server:
+        service:
+          type: LoadBalancer
+

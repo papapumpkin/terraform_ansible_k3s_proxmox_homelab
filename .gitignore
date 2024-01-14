@@ -1,0 +1,9 @@
+.vscode/
+.terraform**
+terraform[.-]*
+*.pem
+*.pub
+debian_key
+vault_file.yml
+kubeconfig.yml
+.DS_Store

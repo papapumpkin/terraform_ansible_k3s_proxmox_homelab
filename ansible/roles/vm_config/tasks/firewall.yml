@@ -1,0 +1,27 @@
+---
+- name: Setup UFW - Allow local network SSH access only
+  ufw:
+    rule: allow
+    port: 22
+    src: "{{ local_network }}"
+  notify: Enable UFW
+
+- name: Allow k3s cluster access (6443) to local network
+  ufw:
+    rule: allow
+    port: 6443
+    proto: tcp
+    src: "{{ local_network }}"
+  notify: Enable UFW
+
+- name: Deny all other inbound traffic
+  ufw:
+    rule: deny
+    direction: in
+  notify: Enable UFW
+
+- name: Allow all outbound traffic
+  ufw:
+    rule: allow
+    direction: out
+  notify: Enable UFW

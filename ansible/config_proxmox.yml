@@ -1,0 +1,6 @@
+---
+- hosts: proxmox
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: ssh_access

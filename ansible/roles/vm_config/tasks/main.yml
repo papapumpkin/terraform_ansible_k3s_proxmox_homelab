@@ -1,0 +1,52 @@
+---
+- name: Update APT package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600  # 1 hour
+
+- name: Upgrade all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Install necessary packages
+  apt:
+    name:
+      - curl
+      - vim
+      - htop
+      - git
+      - tmux
+      - zsh
+      - ufw
+      - fail2ban
+    state: present
+
+- name: Set the timezone to UTC
+  timezone:
+    name: Etc/UTC
+
+- name: Disable password authentication for SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  notify: Restart SSH
+
+- name: Disable root login via SSH
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+  notify: Restart SSH
+
+- name: Configure firewall
+  include_tasks: firewall.yml
+
+- name: Configure fail2ban
+  include_tasks: fail2ban.yml
+
+- name: Configure terminal
+  include_tasks: terminal.yml
+
+# - name: Configure tmux
+#   include_tasks: tmux.yml

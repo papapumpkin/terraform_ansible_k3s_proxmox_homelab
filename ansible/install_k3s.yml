@@ -1,0 +1,29 @@
+---
+- hosts: k3s_cluster
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: k3s_preconfig
+    - role: k3s_download
+
+- hosts: kube_server
+  become: yes
+  roles:
+    - role: k3s/master
+
+- hosts: kube_agents
+  become: yes
+  roles:
+    - role: k3s/node
+
+- hosts: localhost
+  gather_facts: False
+  become: yes
+  tasks:
+    - name: Fetch kubeconfig from master (kube_server)
+      fetch:
+        src: "/etc/rancher/k3s/k3s.yaml"
+        dest: "{{ playbook_dir }}/kubeconfig.yml"
+        flat: yes
+      delegate_to: "{{ groups['kube_server'][0] }}"
+      run_once: true

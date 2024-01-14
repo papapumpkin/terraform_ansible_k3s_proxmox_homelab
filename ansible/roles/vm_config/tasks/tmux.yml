@@ -1,0 +1,18 @@
+---
+- name: Copy .tmux.conf
+  copy:
+    src: .tmux.conf
+    dest: ~/.tmux.conf
+  notify:
+    - Reload tmux
+
+- name: Clone Tmux Plugin Manager
+  git:
+    repo: 'https://github.com/tmux-plugins/tpm'
+    dest: '~/.tmux/plugins/tpm'
+    version: master
+  register: tpm_installed
+
+- name: Install TPM plugins
+  command: '~/.tmux/plugins/tpm/bin/install_plugins'
+  when: tpm_installed is changed
